@@ -2,75 +2,75 @@
 
 pragma solidity ^0.8.2;
 
-contract Noter {
-    struct EvIlani {
+contract BlockChainRealEstate {
+    struct houseAdvertisement {
         uint id;
-        uint m2;
+        uint sqft;
         uint price;
         string location;
-        address sahip;
-        address alici;
-        bool sahipOnay;
-        bool aliciOnay;
-        bool sonDurum;
-        bool paraCekimi;
+        address owner;
+        address costumer;
+        bool ownerCheck;
+        bool costumerCheck;
+        bool finalSituation;
+        bool withdrawalStatus;
     }
 
     uint public id = 0;
-    mapping(uint => EvIlani) public ilanlar;
+    mapping(uint => houseAdvertisement) public Advertisements;
 
-    function evAl(uint _id) public payable {
-        EvIlani storage evIlani = ilanlar[_id];
+    function buyHouse(uint _id) public payable {
+        houseAdvertisement storage houseAdvertisement = Advertisements[_id];
 
-        require(evIlani.sahip != msg.sender);
-        require(evIlani.price <= msg.value);
+        require(houseAdvertisement.owner != msg.sender);
+        require(houseAdvertisement.price <= msg.value);
 
-        evIlani.alici = msg.sender;
+        houseAdvertisement.costumer = msg.sender;
     }
 
-    function eviSat(uint _m2, uint _price, string memory _location) public {
-        EvIlani memory evIlani = EvIlani({
+    function sellhouse(uint _sqft, uint _price, string memory _location) public {
+        houseAdvertisement memory houseAdvertisement = houseAdvertisement({
             id: id, 
-            m2: _m2,
+            m2: _sqft,
             price: _price,
             location: _location,
-            sahip: msg.sender,
-            alici: msg.sender,
-            sahipOnay: false,
-            aliciOnay: false,
-            sonDurum: false,
-            paraCekimi: false
+            owner: msg.sender,
+            costumer: msg.sender,
+            ownerCheck: false,
+            costumerCheck: false,
+            finalSituation: false,
+            withdrawalStatus: false
             });
-        ilanlar[id] = evIlani;
+        Advertisements[id] = houseAdvertisement;
         id++;
 
-        evIlani.sahip = msg.sender;
+        houseAdvertisement.owner = msg.sender;
     }
 
-    function onayla(uint _id) public {
-        EvIlani storage evIlani = ilanlar[_id];
+    function accept(uint _id) public {
+        houseAdvertisement storage houseAdvertisement = Advertisement[_id];
 
-        require(evIlani.sahip != evIlani.alici);
-        require(msg.sender == evIlani.sahip || msg.sender == evIlani.alici);
+        require(houseAdvertisement.owner != houseAdvertisement.costumer);
+        require(msg.sender == houseAdvertisement.owner || msg.sender == houseAdvertisement.costumer);
         
-        if (msg.sender == evIlani.sahip) {
-            evIlani.sahipOnay = true;
-        } else if (msg.sender == evIlani.alici) {
-            evIlani.aliciOnay = true;
+        if (msg.sender == houseAdvertisement.owner) {
+            houseAdvertisement.ownerCheck = true;
+        } else if (msg.sender == houseAdvertisement.costumer) {
+            houseAdvertisement.costumerCheck = true;
         }
 
-        if (evIlani.aliciOnay == true && evIlani.sahipOnay == true) {
-            evIlani.sonDurum = true;
+        if (houseAdvertisement.costumerCheck == true && houseAdvertisement.ownerCheck == true) {
+            houseAdvertisement.finalSituation = true;
         }
     }
 
-    function paraCek(uint _id) public {
-        EvIlani storage evIlani = ilanlar[_id];
+    function withdrawMoney(uint _id) public {
+        houseAdvertisement storage houseAdvertisement = Advertisement[_id];
 
-        require(evIlani.sahip == msg.sender);
-        require(evIlani.sonDurum == true);
+        require(houseAdvertisement.owner == msg.sender);
+        require(houseAdvertisement.finalSituation == true);
 
-        payable(evIlani.sahip).transfer(evIlani.price);
+        payable(houseAdvertisement.owner).transferhouseAdvertisement.price);
 
     }
 }
